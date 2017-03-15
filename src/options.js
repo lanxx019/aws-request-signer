@@ -11,6 +11,7 @@ function save_options() {
   var securitytoken = document.getElementById('securitytoken').value;
   var credentialtype_instanceprofile = document.getElementById('credentialtype_instanceprofile').checked;
   var credentialtype_explicit = document.getElementById('credentialtype_explicit').checked;
+  var url_pattern = document.getElementById('url_pattern').value;
 
   chrome.storage.sync.set({
 	enabled: enabled,
@@ -20,7 +21,8 @@ function save_options() {
 	secretaccesskey: secretaccesskey,
 	securitytoken: securitytoken,
 	credentialtype_instanceprofile: credentialtype_instanceprofile,
-	credentialtype_explicit: credentialtype_explicit
+	credentialtype_explicit: credentialtype_explicit,
+  url_pattern: url_pattern
   }, function() {
     var status = document.getElementById('status');
     status.textContent = 'Options saved.';
@@ -39,7 +41,8 @@ function restore_options() {
 	secretaccesskey: '',
 	securitytoken: '',
 	credentialtype_instanceprofile: true,
-	credentialtype_explicit: false
+	credentialtype_explicit: false,
+  url_pattern: ''
   }, function(items) {
 	document.getElementById('enabled').checked = items.enabled;
 	document.getElementById('region').value = items.region;
@@ -49,6 +52,7 @@ function restore_options() {
 	document.getElementById('securitytoken').value = items.securitytoken;
 	document.getElementById('credentialtype_instanceprofile').checked = items.credentialtype_instanceprofile;
 	document.getElementById('credentialtype_explicit').checked = items.credentialtype_explicit;
+  document.getElementById('url_pattern').value = items.url_pattern;
 	toggle_credential_inputs(items.credentialtype_instanceprofile);
   });
 }

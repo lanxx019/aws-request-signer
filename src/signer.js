@@ -11,6 +11,7 @@ var secretaccesskey = '';
 var securitytoken = '';
 var credentialtype_instanceprofile = false;
 var credentialtype_explicit = false;
+var url_pattern = '';
 
 var instanceprofilecredentialscached = false;
 var instanceprofilecredentialsexpiry;
@@ -24,7 +25,8 @@ function getsettings() {
 		secretaccesskey: '',
 		securitytoken: '',
 		credentialtype_instanceprofile: true,
-		credentialtype_explicit: false
+		credentialtype_explicit: false,
+    url_pattern: ''
 		}, function(items) {
 			enabled = items.enabled;
 			region = items.region;
@@ -34,6 +36,7 @@ function getsettings() {
 			securitytoken = items.securitytoken;
 			credentialtype_instanceprofile = items.credentialtype_instanceprofile;
 			credentialtype_explicit = items.credentialtype_explicit;
+      url_pattern = items.url_pattern;
 			
 			updateicon();
 			if (credentialtype_instanceprofile)
@@ -60,6 +63,9 @@ chrome.webRequest.onBeforeRequest.addListener(
 	  if (!enabled || !valid())
 		  return;
 
+    if (url_pattern && !details.url.match(url_pattern))
+      return;
+
 	  var hashedPayload = getHashedPayload(details);
 	  hashedPayloads[details.requestId] = hashedPayload;
 	  log('Hashed Payload: ' + hashedPayload);
@@ -76,6 +82,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 	  if (!enabled || !valid())
 		  return;
  
+    if (url_pattern && !details.url.match(url_pattern))
+      return;
+
 	  var authedHeaders = signRequest(details);
 	  delete hashedPayloads[details.requestId];
  
